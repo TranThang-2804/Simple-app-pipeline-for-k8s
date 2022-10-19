@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         REPOSITORY_URI = 'tommytran2804/k8spipelineapp'
+        HELM_REPOSITORY = 'https://github.com/TranThang-2804/k8s-manifest-for-simple-java-app.git'
         CI = 'false'
         dockerhub=credentials('dockerhub')
     }
@@ -55,6 +56,8 @@ pipeline {
         stage('Update Helm manifest file') {
             steps {
                 sh 'cat tagnamefile'
+                sh 'git clone ${HELM_REPOSITOR}'
+                sh 'cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values'
                 echo 'update helm manifest'
             }
         }
