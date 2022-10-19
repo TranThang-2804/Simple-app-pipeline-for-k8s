@@ -43,7 +43,7 @@ pipeline {
         stage('Push to registry') {
             steps {
                 sh '''#!/bin/bash
-                    IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
+                    export IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
                     echo $IMAGE_TAG
                 '''
                 sh 'echo $IMAGE_TAG'
