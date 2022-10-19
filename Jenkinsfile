@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        REPOSITORY_URI = ''
+        REPOSITORY_URI = 'tommytran2804/k8spipelineapp'
         CI = 'false'
         dockerhub=credentials('dockerhub')
     }
