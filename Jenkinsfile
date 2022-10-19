@@ -45,18 +45,16 @@ pipeline {
                 sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
                 sh '''#!/bin/bash
                     export IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
-                    echo $IMAGE_TAG
                     docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
                     docker push ${REPOSITORY_URI}:latest
                     docker push ${REPOSITORY_URI}:$IMAGE_TAG
+                    echo IMAGE_TAG=$IMAGE_TAG > tagnamefile
                 '''
-                // sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
-                // sh 'docker push ${REPOSITORY_URI}:latest'
-                // sh 'docker push ${REPOSITORY_URI}:$IMAGE_TAG'
             }
         }
         stage('Update Helm manifest file') {
             steps {
+                sh 'cat tagnamefile'
                 echo 'update helm manifest'
             }
         }
