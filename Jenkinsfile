@@ -24,9 +24,7 @@ pipeline {
                 // Run Maven on a Unix agent.
                 echo 'Start building project'
 
-                 steps {
-                    sh 'mvn clean package'
-                }
+                sh 'mvn clean package'
 
                 echo 'finished building'
                 // To run Maven on a Windows agent, use
