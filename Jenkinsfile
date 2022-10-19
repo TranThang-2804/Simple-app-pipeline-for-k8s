@@ -5,7 +5,7 @@ pipeline {
     //     CI = 'false'
     //     dockerhub=credentials('dockerhub')
     // }
-
+hi
     stages {
         stage('Pre build') {
             steps {
