@@ -7,9 +7,9 @@ pipeline {
         dockerhub=credentials('dockerhub')
     }
     
-    tools {
-        maven 'maven-3.8.6' 
-    }
+    // tools {
+    //     maven 'maven-3.8.6' 
+    // }
 
     stages {
         // stage('Pre build') {
