@@ -44,7 +44,9 @@ pipeline {
             steps {
                 sh '''#!/bin/bash
                     IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
+                    echo $IMAGE_TAG
                 '''
+                echo $IMAGE_TAG
                 sh 'docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG'
                 sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
                 sh 'docker push ${REPOSITORY_URI}:latest'
