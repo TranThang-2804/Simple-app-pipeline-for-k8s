@@ -45,7 +45,7 @@ pipeline {
         stage('Push to registry') {
             steps {
                 IMAGE_TAG= sh (
-                    script: 'echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')',
+                    script: 'echo build_$(echo `date -d +%F`)_$(echo `date -d +%T`) | awk ' { gsub (":", ".")} 1 ')',
                     returnStatus: true
                 )
                 sh 'docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:${IMAGE_TAG}'
