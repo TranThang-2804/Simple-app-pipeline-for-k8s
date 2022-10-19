@@ -4,7 +4,7 @@ pipeline {
     environment {
         REPOSITORY_URI = ''
         CI = 'false'
-        IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
+        IMAGE_TAG='echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ''
         dockerhub=credentials('dockerhub')
     }
     
