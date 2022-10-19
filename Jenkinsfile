@@ -57,7 +57,7 @@ pipeline {
                 sh 'cat tagnamefile'
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 sh 'git clone ${HELM_REPOSITORY}'
-                sh "yq -i \'.deployment.tag = \"demo\"\' ./k8s-manifest-for-simple-java-app.git/charts/helm-demo/values.yaml"
+                sh "yq -i '.deployment.tag = \"demo\"' ./k8s-manifest-for-simple-java-app.git/charts/helm-demo/values.yaml"
 
                 echo 'update helm manifest'
             }
