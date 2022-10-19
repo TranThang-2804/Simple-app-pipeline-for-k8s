@@ -1,10 +1,10 @@
 pipeline {
     agent any
 
-    environment {
-        CI = 'false'
-        dockerhub=credentials('dockerhub')
-    }
+    // environment {
+    //     CI = 'false'
+    //     dockerhub=credentials('dockerhub')
+    // }
 
     stages {
         stage('Pre build') {
