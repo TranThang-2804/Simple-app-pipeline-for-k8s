@@ -57,7 +57,7 @@ pipeline {
             steps {
                 sh 'cat tagnamefile'
                 sh 'git clone ${HELM_REPOSITORY}'
-                sh 'cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values'
+                sh 'cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml'
                 echo 'update helm manifest'
             }
         }
