@@ -1,31 +1,32 @@
 pipeline {
     agent any
 
-    // environment {
-    //     CI = 'false'
-    //     dockerhub=credentials('dockerhub')
-    // }
-hi
+    environment {
+        REPOSITORY_URI = ''
+        CI = 'false'
+        dockerhub=credentials('dockerhub')
+    }
+    
+    tools {
+        maven 'maven-3.6.3' 
+    }
+
     stages {
-        stage('Pre build') {
-            steps {
-                echo 'INSTALL ENVIRONMENT'
-                sh 'sudo npm install -g npm@8.13.2'
-            }
-        }
+        // stage('Pre build') {
+        //     steps {
+        //         echo 'INSTALL ENVIRONMENT'
+        //         sh 'sudo npm install -g npm@8.13.2'
+        //     }
+        // }
         stage('Build') {
             steps {
                 echo 'pulled git repo'
                 // Run Maven on a Unix agent.
                 echo 'Start building project'
 
-                echo 'INSTALLING DEPENDENCIES'
-                sh 'npm install'
-                echo 'DEPENDENCIES INSTALLED'
-
-                echo 'BUILDING ARTIFACT'
-                sh 'npm run build'
-                echo 'ARTIFACT BUILT'
+                 steps {
+                    sh 'mvn clean package'
+                }
 
                 echo 'finished building'
                 // To run Maven on a Windows agent, use
@@ -37,27 +38,22 @@ hi
                 echo 'CREATING DOCKER IMAGE'
                 sh 'sudo usermod -aG docker jenkins'
                 sh 'newgrp docker'
-                sh 'docker build -t webservice:current .'
+                sh 'docker build --platform linux/amd64 -t ${REPOSITORY_URI}:latest .'
             }
 
         }
         stage('Push to registry') {
             steps {
-                sh 'docker image tag webservice:current tranthang2804/webservice:current'
+                sh 'IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')'
+                sh 'docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG'
                 sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
-                sh 'docker image push tranthang2804/webservice:current'
+                sh 'docker push ${REPOSITORY_URI}:latest'
+                sh 'docker push ${REPOSITORY_URI}:$IMAGE_TAG'
             }
         }
-        stage('Deploy on Docker Swarm') {
+        stage('Update Helm manifest file') {
             steps {
-                echo 'DEPLOY ON DOCKER SWARM'
-                sh 'docker service update \
-                    --update-parallelism 1 \
-                    --update-delay 10s \
-                    --image tranthang2804/webservice:current \
-                    --force \
-                    webapp'
-                sh 'echo UPDATED IMAGE FOR SERVICE ON DOCKER SWARMM'
+                echo 'update helm manifest'
             }
         }
     }
