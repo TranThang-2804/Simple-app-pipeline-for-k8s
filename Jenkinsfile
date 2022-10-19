@@ -15,8 +15,7 @@ pipeline {
     stages {
         // stage('Pre build') {
         //     steps {
-        //         echo 'INSTALL ENVIRONMENT'
-        //         sh 'sudo npm install -g npm@8.13.2'
+        //         sh 'npm install -g npm@8.13.2'
         //     }
         // }
         stage('Build') {
@@ -49,7 +48,7 @@ pipeline {
                     docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
                     docker push ${REPOSITORY_URI}:latest
                     docker push ${REPOSITORY_URI}:$IMAGE_TAG
-                    echo IMAGE_TAG=$IMAGE_TAG > tagnamefile
+                    echo $IMAGE_TAG > tagnamefile
                 '''
             }
         }
@@ -58,7 +57,9 @@ pipeline {
                 sh 'cat tagnamefile'
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 sh 'git clone ${HELM_REPOSITORY}'
-                sh 'cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml'
+                sh '''#!bin/bash
+                    yq -i '.deployment.tag = "$(cat tagnamefile)"' ./k8s-manifest-for-simple-java-app.git/charts/helm-demo/values.yaml
+                '''
                 echo 'update helm manifest'
             }
         }
