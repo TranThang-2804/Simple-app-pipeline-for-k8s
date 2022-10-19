@@ -56,7 +56,7 @@ pipeline {
         stage('Update Helm manifest file') {
             steps {
                 sh 'cat tagnamefile'
-                sh 'git clone ${HELM_REPOSITOR}'
+                sh 'git clone ${HELM_REPOSITORY}'
                 sh 'cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values'
                 echo 'update helm manifest'
             }
