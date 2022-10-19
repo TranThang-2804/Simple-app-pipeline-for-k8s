@@ -13,11 +13,11 @@ pipeline {
     // }
 
     stages {
-        stage('Pre build') {
-            steps {
-                sh 'sudo snap yq'
-            }
-        }
+        // stage('Pre build') {
+        //     steps {
+        //         sh 'sudo snap yq'
+        //     }
+        // }
         stage('Build') {
             steps {
                 echo 'pulled git repo'
@@ -58,6 +58,7 @@ pipeline {
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 sh 'git clone ${HELM_REPOSITORY}'
                 sh 'yq -i '.deployment.tag = "demo"' ./k8s-manifest-for-simple-java-app.git/charts/helm-demo/values.yaml'
+
                 echo 'update helm manifest'
             }
         }
