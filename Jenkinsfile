@@ -27,7 +27,7 @@ pipeline {
                 sh 'mvn clean package'
 
                 echo 'finished building'
-                // To run Maven on a Windows agent, use
+                // To run Maven on a Windows agent, use command
                 // bat "mvn -Dmaven.test.failure.ignore=true clean package"
             }
         }
@@ -54,11 +54,11 @@ pipeline {
         }
         stage('Update Helm manifest file') {
             steps {
-                sh 'cat tagnamefile'
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 sh 'git clone ${HELM_REPOSITORY}'
                 sh '''#!/bin/bash
-                    sudo yq -i e '.deployment.tag |= "hello"' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
+                    export IMAGE_TAG=$(cat tagnamefile)
+                    sudo yq -i e '.deployment.tag |= "$IMAGE_TAG"' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
                     cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
                 '''
                 echo 'update helm manifest'
