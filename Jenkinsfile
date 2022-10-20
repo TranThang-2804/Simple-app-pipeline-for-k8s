@@ -27,25 +27,25 @@ pipeline {
         //     }
 
         // }
-        stage('Push to registry') {
-            steps {
-                sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
-                sh '''#!/bin/bash
-                    export IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
-                    docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-                    docker push ${REPOSITORY_URI}:latest
-                    docker push ${REPOSITORY_URI}:$IMAGE_TAG
-                    echo $IMAGE_TAG > tagnamefile
-                '''
-            }
-        }
+        // stage('Push to registry') {
+        //     steps {
+        //         sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
+        //         sh '''#!/bin/bash
+        //             export IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
+        //             docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+        //             docker push ${REPOSITORY_URI}:latest
+        //             docker push ${REPOSITORY_URI}:$IMAGE_TAG
+        //             echo $IMAGE_TAG > tagnamefile
+        //         '''
+        //     }
+        // }
         stage('Update Helm manifest file') {
             steps {
-                sh 'rm -rf ./k8s-manifest-for-simple-java-app'
-                sh 'git clone ${HELM_REPOSITORY}'
+                // sh 'rm -rf ./k8s-manifest-for-simple-java-app'
+                // sh 'git clone ${HELM_REPOSITORY}'
                 echo 'update helm manifest'
                 sh 'export IMAGE_TAG=$(cat tagnamefile)'
-                sh 'sudo yq eval /".deployment.tag = /"/$IMAGE_TAG/"/" -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml'
+                sh 'sudo yq eval \'.deployment.tag = \'$IMAGE_TAG\'\' -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml'
                     // export HELM_VERSION=$(echo 1.5.`date +%s`)
                     // sudo yq eval ".version = \"$HELM_VERSION\"" -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
             }
