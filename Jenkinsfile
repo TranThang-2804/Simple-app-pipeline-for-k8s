@@ -46,12 +46,6 @@ pipeline {
                 sh 'cd ./k8s-manifest-for-simple-java-app | git pull origin main'
                 echo 'update helm manifest'
                 sh 'sudo sh ./scripts/update_helm_chart.sh'
-                sh '''#!/bin/bash
-                    cd ./k8s-manifest-for-simple-java-app
-                    git add .
-                    git commit -m "update by pipeline"
-                    git push origin main
-                '''
             }
         }
     }
