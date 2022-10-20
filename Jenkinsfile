@@ -58,7 +58,7 @@ pipeline {
                 sh 'git clone ${HELM_REPOSITORY}'
                 sh '''#!/bin/bash
                     export IMAGE_TAG=$(cat tagnamefile)
-                    sudo yq -i e '.deployment.tag |= "$IMAGE_TAG"' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
+                    sudo yq -i e '.deployment.tag |= $IMAGE_TAG' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
                     cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
                 '''
                 echo 'update helm manifest'
