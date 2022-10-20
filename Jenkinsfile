@@ -10,35 +10,35 @@ pipeline {
     
 
     stages {
-        // stage('Build') {
-        //     steps {
-        //         echo 'pulled git repo'
-        //         echo 'Start building project'
+        stage('Build') {
+            steps {
+                echo 'pulled git repo'
+                echo 'Start building project'
 
-        //         sh 'mvn clean package'
+                sh 'mvn clean package'
 
-        //         echo 'finished building'
-        //     }
-        // }
-        // stage('Create Docker Image') {
-        //     steps {
-        //         echo 'CREATING DOCKER IMAGE'
-        //         sh 'docker build --platform linux/amd64 -t ${REPOSITORY_URI}:latest .'
-        //     }
+                echo 'finished building'
+            }
+        }
+        stage('Create Docker Image') {
+            steps {
+                echo 'CREATING DOCKER IMAGE'
+                sh 'docker build --platform linux/amd64 -t ${REPOSITORY_URI}:latest .'
+            }
 
-        // }
-        // stage('Push to registry') {
-        //     steps {
-        //         sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
-        //         sh '''#!/bin/bash
-        //             export IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
-        //             docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-        //             docker push ${REPOSITORY_URI}:latest
-        //             docker push ${REPOSITORY_URI}:$IMAGE_TAG
-        //             echo $IMAGE_TAG > tagnamefile
-        //         '''
-        //     }
-        // }
+        }
+        stage('Push to registry') {
+            steps {
+                sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
+                sh '''#!/bin/bash
+                    export IMAGE_TAG=$(echo build_$(echo `date -d '+7 hours' +%F`)_$(echo `date -d '+7 hours' +%T`) | awk ' { gsub (":", ".")} 1 ')
+                    docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+                    docker push ${REPOSITORY_URI}:latest
+                    docker push ${REPOSITORY_URI}:$IMAGE_TAG
+                    echo $IMAGE_TAG > tagnamefile
+                '''
+            }
+        }
         stage('Update Helm manifest file') {
             steps {
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
