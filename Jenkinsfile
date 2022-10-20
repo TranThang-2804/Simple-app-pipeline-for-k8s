@@ -59,7 +59,8 @@ pipeline {
                 sh '''#!/bin/bash
                     export IMAGE_TAG=$(cat tagnamefile)
                     sudo yq -i e '.deployment.tag |= $IMAGE_TAG' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
-                    cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
+                    sudo yq -i e '.version |= $(echo 1.5.`date +%s`)' ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
+                    cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
                 '''
                 echo 'update helm manifest'
             }
