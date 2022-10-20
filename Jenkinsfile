@@ -57,11 +57,10 @@ pipeline {
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 sh 'git clone ${HELM_REPOSITORY}'
                 sh '''#!/bin/bash
-                    export IMAGE_TAG=$(cat tagnamefile)
-                    export HELM_VERSION=$(echo 1.5.`date +%s`)
-                    sudo yq -i e '.deployment.tag |= $IMAGE_TAG' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
-                    sudo yq -i e '.version |= $HELM_VERSION' ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
-                    cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
+                    IMAGE_TAG=$(cat tagnamefile)
+                    sudo yq eval ".deployment.tag = \"$IMAGE_TAG\"" -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
+                    HELM_VERSION=$(echo 1.5.`date +%s`)
+                    sudo yq eval ".version = \"$HELM_VERSION\"" -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
                 '''
                 echo 'update helm manifest'
             }
