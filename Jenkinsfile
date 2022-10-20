@@ -43,7 +43,7 @@ pipeline {
             steps {
                 // sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 // sh 'git clone ${HELM_REPOSITORY}'
-                sh 'cd ./k8s-manifest-for-simple-java-app | git pull'
+                sh 'cd ./k8s-manifest-for-simple-java-app | git pull origin main'
                 echo 'update helm manifest'
                 sh 'sudo sh ./scripts/update_helm_chart.sh'
                 sh '''#!/bin/bash
