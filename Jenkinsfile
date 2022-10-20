@@ -8,38 +8,25 @@ pipeline {
         dockerhub=credentials('dockerhub')
     }
     
-    // tools {
-    //     maven 'maven-3.8.6' 
-    // }
 
     stages {
-        // stage('Pre build') {
+        // stage('Build') {
         //     steps {
-        //         sh 'sudo snap yq'
+        //         echo 'pulled git repo'
+        //         echo 'Start building project'
+
+        //         sh 'mvn clean package'
+
+        //         echo 'finished building'
         //     }
         // }
-        stage('Build') {
-            steps {
-                echo 'pulled git repo'
-                // Run Maven on a Unix agent.
-                echo 'Start building project'
+        // stage('Create Docker Image') {
+        //     steps {
+        //         echo 'CREATING DOCKER IMAGE'
+        //         sh 'docker build --platform linux/amd64 -t ${REPOSITORY_URI}:latest .'
+        //     }
 
-                sh 'mvn clean package'
-
-                echo 'finished building'
-                // To run Maven on a Windows agent, use command
-                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
-            }
-        }
-        stage('Create Docker Image') {
-            steps {
-                echo 'CREATING DOCKER IMAGE'
-                // sh 'sudo usermod -aG docker jenkins'
-                // sh 'newgrp docker'
-                sh 'docker build --platform linux/amd64 -t ${REPOSITORY_URI}:latest .'
-            }
-
-        }
+        // }
         stage('Push to registry') {
             steps {
                 sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
@@ -56,13 +43,11 @@ pipeline {
             steps {
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 sh 'git clone ${HELM_REPOSITORY}'
-                sh '''#!/bin/bash
-                    export IMAGE_TAG=$(cat tagnamefile)
-                    sudo yq eval ".deployment.tag = \"$IMAGE_TAG\"" -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
-                    export HELM_VERSION=$(echo 1.5.`date +%s`)
-                    sudo yq eval ".version = \"$HELM_VERSION\"" -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
-                '''
                 echo 'update helm manifest'
+                sh 'export IMAGE_TAG=$(cat tagnamefile)'
+                sh 'sudo yq eval ".deployment.tag = \"$IMAGE_TAG\"" -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml'
+                    // export HELM_VERSION=$(echo 1.5.`date +%s`)
+                    // sudo yq eval ".version = \"$HELM_VERSION\"" -i ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
             }
         }
     }
