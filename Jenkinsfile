@@ -41,8 +41,8 @@ pipeline {
         // }
         stage('Update Helm manifest file') {
             steps {
-                // sh 'rm -rf ./k8s-manifest-for-simple-java-app'
-                // sh 'git clone ${HELM_REPOSITORY}'
+                sh 'rm -rf ./k8s-manifest-for-simple-java-app'
+                sh 'git clone ${HELM_REPOSITORY}'
                 echo 'update helm manifest'
                 sh 'sudo sh ./scripts/update_helm_chart.sh'
             }
