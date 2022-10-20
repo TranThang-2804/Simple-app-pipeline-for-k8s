@@ -44,7 +44,7 @@ pipeline {
                 // sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 // sh 'git clone ${HELM_REPOSITORY}'
                 echo 'update helm manifest'
-                sh './scripts/update_helm_chart.sh'
+                sh 'sudo ./scripts/update_helm_chart.sh'
             }
         }
     }
