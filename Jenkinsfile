@@ -57,7 +57,7 @@ pipeline {
                 sh 'cat tagnamefile'
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 sh 'git clone ${HELM_REPOSITORY}'
-                sh '''!#/bin/bash
+                sh '''#!/bin/bash
                     yq -i '.deployment.tag = "demo"' ./k8s-manifest-for-simple-java-app.git/charts/helm-demo/values.yaml
                     cat ./k8s-manifest-for-simple-java-app.git/charts/helm-demo/values.yaml
                 '''
