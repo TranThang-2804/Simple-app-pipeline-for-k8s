@@ -58,7 +58,7 @@ pipeline {
                 sh 'git clone ${HELM_REPOSITORY}'
                 sh '''#!/bin/bash
                     export IMAGE_TAG=$(cat tagnamefile)
-                    export HELM_VERSION=$(echo 1.5.`date +\%s`)
+                    export HELM_VERSION=$(echo 1.5.`date +%s`)
                     sudo yq -i e '.deployment.tag |= $IMAGE_TAG' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
                     sudo yq -i e '.version |= $HELM_VERSION' ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
                     cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/Chart.yaml
