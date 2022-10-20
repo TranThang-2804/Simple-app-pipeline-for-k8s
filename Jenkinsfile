@@ -58,7 +58,7 @@ pipeline {
                 sh 'rm -rf ./k8s-manifest-for-simple-java-app'
                 sh 'git clone ${HELM_REPOSITORY}'
                 sh '''#!/bin/bash
-                    yq -i \'.deployment.tag = \"demo\"\' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
+                    sudo yq -i e '.deployment.tag |= "hello"' ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
                     cat ./k8s-manifest-for-simple-java-app/charts/helm-demo/values.yaml
                 '''
                 echo 'update helm manifest'
