@@ -8,6 +8,6 @@ public class Home {
 
 	@RequestMapping("/")
 	public String home() {
-		return "Hello Docker World from Tech caffee";
+		return "Hello Docker World from Tech coffee PMO";
 	}
 }
